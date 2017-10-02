@@ -41,13 +41,6 @@ namespace HealthTracker.Controllers
             return new ObjectResult(item); 
         }
 
-        // GET api/values/5
-        [HttpGet("{id}")]
-        public string Get(int id)
-        {
-            return "value";
-        }
-
         // POST api/values
         [HttpPost]
         public IActionResult Post([FromBody]FormData item)
