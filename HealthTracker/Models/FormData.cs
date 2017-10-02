@@ -18,6 +18,7 @@ namespace HealthTracker.Models
         public bool Smoked { get; set; }
         public bool Drank { get; set; }
         public bool Sexed { get; set; }
+        public DateTime PostDate { get; set; } = DateTime.Now;
 
         public FormData()
         {

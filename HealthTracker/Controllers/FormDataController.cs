@@ -77,6 +77,7 @@ namespace HealthTracker.Controllers
             formdata.BehaviorActivity = item.BehaviorActivity;
             formdata.Sexed = item.Sexed;
             formdata.Smoked = item.Smoked;
+            formdata.PostDate = item.PostDate;
 
             _context.FormDatas.Update(formdata);
             _context.SaveChanges();
