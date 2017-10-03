@@ -4,8 +4,8 @@ using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using HealthTracker.Models;
-
-// For more information on enabling Web API for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
+using Microsoft.AspNetCore.Authorization;
+using System.Security.Claims;
 
 namespace HealthTracker.Controllers
 {
@@ -24,9 +24,11 @@ namespace HealthTracker.Controllers
         }
 
         //GET: ALL
+        [Authorize]
         [HttpGet]
         public IEnumerable<FormData> GetAll()
         {
+            string userId = User.Claims.FirstOrDefault(c => c.Type == ClaimTypes.NameIdentifier).Value;
             return _context.FormDatas.ToList();
         }
 
@@ -42,6 +44,7 @@ namespace HealthTracker.Controllers
         }
 
         // POST api/values
+
         [HttpPost]
         public IActionResult Post([FromBody]FormData item)
         {
@@ -55,6 +58,8 @@ namespace HealthTracker.Controllers
         }
 
         // PUT api/values/5
+
+
         [HttpPut("{id}")]
         public IActionResult Put(int id, [FromBody]FormData item)
         {
