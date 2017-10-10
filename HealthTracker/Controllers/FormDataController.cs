@@ -10,7 +10,7 @@ using System.Security.Claims;
 namespace HealthTracker.Controllers
 {
     [Route("api/[controller]")]
-    public class FormDataController : Controller
+    public class FormDataController : Controller 
     {
         private readonly FormDataContext _context;
         public FormDataController(FormDataContext context)
@@ -24,11 +24,11 @@ namespace HealthTracker.Controllers
         }
 
         //GET: ALL
-        [Authorize]
+        
         [HttpGet]
         public IEnumerable<FormData> GetAll()
         {
-            string userId = User.Claims.FirstOrDefault(c => c.Type == ClaimTypes.NameIdentifier).Value;
+            //string userId = User.Claims.FirstOrDefault(c => c.Type == ClaimTypes.NameIdentifier).Value;
             return _context.FormDatas.ToList();
         }
 
@@ -43,11 +43,28 @@ namespace HealthTracker.Controllers
             return new ObjectResult(item); 
         }
 
+        [HttpGet("me", Name = "Get For User")]
+        [Authorize]
+        public IActionResult GetByUserId()
+        {
+            string userId = User.Claims.FirstOrDefault(c => c.Type == ClaimTypes.NameIdentifier).Value;
+
+            var item = _context.FormDatas.FirstOrDefault(t => t.UserId == userId);
+            if (item == null)
+            {
+                return NotFound();
+            }
+            return new ObjectResult(item);
+        }
+
         // POST api/values
 
         [HttpPost]
         public IActionResult Post([FromBody]FormData item)
         {
+            string userId = User.Claims.FirstOrDefault(c => c.Type == ClaimTypes.NameIdentifier).Value;
+            item.UserId = userId;
+
             if (item == null)
             {
                 return BadRequest();
