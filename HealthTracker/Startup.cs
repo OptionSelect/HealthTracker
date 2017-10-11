@@ -13,6 +13,7 @@ using Microsoft.EntityFrameworkCore;
 using Swashbuckle.AspNetCore.Swagger;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using System.Security.Claims;
+using System.Net;
 
 namespace HealthTracker
 {
@@ -41,33 +42,51 @@ namespace HealthTracker
             });
             
 
-                services.AddAuthentication(options =>
+            services.AddAuthentication(options =>
             {
                 options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
                 options.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
+               
 
             }).AddJwtBearer(options =>
-            {
-                options.Authority = "https://healthtracker.auth0.com/";
-                options.Audience = "https://api.healthtracker.com";
-                options.Events = new JwtBearerEvents
                 {
-                    OnTokenValidated = context =>
-                    {
-                        var claimsIdentity = context.Principal.Identity as ClaimsIdentity;
-                        if (claimsIdentity != null)
+
+
+
+                    Func<AuthenticationFailedContext, Task> redirect = (context) => {
+
+                        if (context.Request.Path.StartsWithSegments("/api") && context.Response.StatusCode == (int)HttpStatusCode.OK)
                         {
-                            // Get the user's ID
-                            string userId = claimsIdentity.Claims.FirstOrDefault(c => c.Type == ClaimTypes.NameIdentifier).Value;
-
-                            // Get the name
-                            string name = claimsIdentity.Claims.FirstOrDefault(c => c.Type == "name")?.Value;
+                            context.Response.StatusCode = (int)HttpStatusCode.Unauthorized;
                         }
-
                         return Task.FromResult(0);
-                    }
-                };
-            });
+
+                    };
+
+                  
+                    options.Authority = "https://healthtracker.auth0.com/";
+                    options.Audience = "https://api.healthtracker.com";
+                    options.Events = new JwtBearerEvents
+                    {
+                        OnTokenValidated = context =>
+                        {
+                            var claimsIdentity = context.Principal.Identity as ClaimsIdentity;
+                            if (claimsIdentity != null)
+                            {
+                                // Get the user's ID
+                                string userId = claimsIdentity.Claims.FirstOrDefault(c => c.Type == ClaimTypes.NameIdentifier).Value;
+
+                                // Get the name
+                                string name = claimsIdentity.Claims.FirstOrDefault(c => c.Type == "name")?.Value;
+                            }
+
+                            return Task.FromResult(0);
+                        }, 
+                        OnAuthenticationFailed = redirect,
+                        
+                    };
+
+                 });
 
         }
 
@@ -78,7 +97,7 @@ namespace HealthTracker
             {
                 app.UseDeveloperExceptionPage();
             }
-
+            //Show unauthorized middleware
             app.UseAuthentication();
 
             app.UseMvc();
