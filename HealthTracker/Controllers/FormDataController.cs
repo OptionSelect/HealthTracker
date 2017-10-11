@@ -62,15 +62,18 @@ namespace HealthTracker.Controllers
         [HttpPost]
         public IActionResult Post([FromBody]FormData item)
         {
-            string userId = User.Claims.FirstOrDefault(c => c.Type == ClaimTypes.NameIdentifier).Value;
-            item.UserId = userId;
+            
 
             if (item == null)
             {
                 return BadRequest();
             }
+            string userId = User.Claims.FirstOrDefault(c => c.Type == ClaimTypes.NameIdentifier).Value;
+            item.UserId = userId;
+
             _context.FormDatas.Add(item);
             _context.SaveChanges();
+
             return CreatedAtRoute("GetById", new { id = item.Id }, item);
         }
 
