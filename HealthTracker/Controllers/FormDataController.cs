@@ -9,6 +9,7 @@ using System.Security.Claims;
 
 namespace HealthTracker.Controllers
 {
+    [Authorize]
     [Route("api/[controller]")]
     public class FormDataController : Controller 
     {
