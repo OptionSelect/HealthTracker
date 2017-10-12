@@ -32,6 +32,15 @@ namespace HealthTracker
             services.AddDbContext<FormDataContext>(options =>
                 options.UseSqlServer(Configuration.GetConnectionString("MyConnection")));
 
+            services.AddCors(options =>
+            {
+                options.AddPolicy("AllowAll",
+                    builder => builder.AllowAnyOrigin()
+                        .AllowAnyMethod()
+                        .AllowAnyHeader()
+                        .AllowCredentials());
+            });
+
             services.AddMvc();
 
             services.AddSwaggerGen(c =>
@@ -86,7 +95,7 @@ namespace HealthTracker
                         
                     };
 
-                 });
+                });
 
         }
 
@@ -114,6 +123,8 @@ namespace HealthTracker
                     name: "default",
                     template: "{controller=Home}/{action=Index}/{id?}");
             });
+
+            app.UseCors("AllowAll");
         }
     }
 }
