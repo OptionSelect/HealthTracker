@@ -44,16 +44,17 @@ namespace HealthTracker.Controllers
             return new ObjectResult(item); 
         }
 
-        [HttpGet("me", Name = "Get For User")]
+        [HttpGet("me", Name = "Get All Forms For User")]
         [Authorize]
         public IActionResult GetByUserId()
         {
             string userId = User.Claims.FirstOrDefault(c => c.Type == ClaimTypes.NameIdentifier).Value;
 
-            var item = _context.FormDatas.FirstOrDefault(t => t.UserId == userId);
+            var item = _context.FormDatas.Where(t => t.UserId == userId);
             if (item == null)
             {
-                return NotFound();
+                FormData[] dataArray = { };
+                return new ObjectResult(dataArray) ;
             }
             return new ObjectResult(item);
         }

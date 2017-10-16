@@ -74,7 +74,7 @@ namespace HealthTracker
 
                   
                     options.Authority = "https://healthtracker.auth0.com/";
-                    options.Audience = "https://api.healthtracker.com";
+                    options.Audience = "FnglgYEe6WUS40OOfVaPQA48Z2Rw2xfe";
                     options.Events = new JwtBearerEvents
                     {
                         OnTokenValidated = context =>
@@ -91,7 +91,7 @@ namespace HealthTracker
 
                             return Task.FromResult(0);
                         }, 
-                        OnAuthenticationFailed = redirect,
+                       // OnAuthenticationFailed = redirect,
                         
                     };
 
