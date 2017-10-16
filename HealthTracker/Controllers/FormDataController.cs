@@ -25,7 +25,6 @@ namespace HealthTracker.Controllers
         }
 
         //GET: ALL
-        
         [HttpGet]
         public IEnumerable<FormData> GetAll()
         {
@@ -59,12 +58,10 @@ namespace HealthTracker.Controllers
             return new ObjectResult(item);
         }
 
-        // POST api/values
-
+        // POST api/values=
         [HttpPost]
         public IActionResult Post([FromBody]FormData item)
         {
-            
 
             if (item == null)
             {
@@ -80,8 +77,6 @@ namespace HealthTracker.Controllers
         }
 
         // PUT api/values/5
-
-
         [HttpPut("{id}")]
         public IActionResult Put(int id, [FromBody]FormData item)
         {
